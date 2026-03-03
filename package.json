@@ -1,0 +1,21 @@
+{
+  "name": "country_explorer_rest_api",
+  "version": "1.0.0",
+  "description": "Country Explorer Node.js Application",
+  "homepage": "https://github.com/jshan98/COUNTRY_EXPLORER_REST_API#readme",
+  "bugs": {
+    "url": "https://github.com/jshan98/COUNTRY_EXPLORER_REST_API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jshan98/COUNTRY_EXPLORER_REST_API.git"
+  },
+  "license": "ISC",
+  "author": "jshan98",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js -e ejs,js,css,html,jpg,png,scss"
+  }
+}

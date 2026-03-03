@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Explorer</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header>
+        <img src=".\assets\world.png" alt="Country Explorer Logo">
+        <h1>Country Explorer</h1>
+    </header>
+    <form id="filters">
+        <div class="filter_input" id="filter-one">
+            Search by Country Name:<br/>
+            <input type="text" id="search-input" placeholder="Enter Country Name"><br/>
+            <small id="name-error" hidden>Enter valid country name</small>
+        </div>
+        <div class="filter_input" id="filter-two">
+            Select a Region:<br/>
+            <select id="region-select">
+                <option value="All Regions" selected>All Regions</option>
+                <option value="Africa">Africa</option>
+                <option value="Americas">Americas</option>
+                <option value="Asia">Asia</option>
+                <option value="Europe">Europe</option>
+                <option value="Oceania">Oceania</option>
+            </select>
+        </div>
+        <div class="filter_input" id="filter-three">
+            Search by Population:<br/>
+            <input type="number" id="population-input" min="0" max="1500000000" placeholder="0" step="10000" value="0"><br/>
+            <small id="hint">Max - 1.5 Billion (1500000000)</small><br/>
+            <small id="pop-error" hidden>Country’s population cannot be greater than 1.5 billion.</small>
+        </div>
+    </form>
+    <div id="country-cards-container">
+
+    </div>
+    <button id="show-more-btn" hidden>Show More</button>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
