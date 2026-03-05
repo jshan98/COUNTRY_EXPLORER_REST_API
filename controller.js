@@ -5,7 +5,7 @@ const countriesServices = require('./countries-services.js');
 /**
  * Function: handleRequest 
  * Description: used as a callback function by createServer in server.js to display page contents.
- * Calls fetchCountries from countriesServices.js to handle API call and fetch data from REST Countries API.
+ * Calls fetchCountries from countries-services.js to handle API call and fetch data from REST Countries API.
  * @param {*} req 
  * @param {*} res 
  */
