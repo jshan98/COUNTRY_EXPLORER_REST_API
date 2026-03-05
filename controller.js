@@ -1,19 +1,38 @@
 const fs = require('fs');
 const path = require('path');
+const countriesServices = require('./countries-services.js');
 
 /**
  * Function: handleRequest 
- * Description: used as a callback function by createServer in server.js to display page contents
+ * Description: used as a callback function by createServer in server.js to display page contents.
+ * Calls fetchCountries from countriesServices.js to handle API call and fetch data from REST Countries API.
  * @param {*} req 
  * @param {*} res 
  */
 function handleRequest(req, res){
     let filePath = "." + req.url;
 
-    if(filePath == "./"){
+    if(filePath === "./"){
         filePath = "./index.html";
     } else if(filePath.substring(0,13) === "./detail.html" ){
         filePath = "./detail.html";
+    } else if(filePath.substring(0, 11) === "./countries" && req.method === 'GET'){
+        countriesServices.fetchCountries()
+            .then(function(data){
+                if(data){
+                    res.writeHead(200, {'Content-Type': 'application/json'});
+                    res.end(JSON.stringify(data));
+                    console.log('Data length: ' + data.length);
+                }else if(!data){
+                    res.writeHead(500, {'Content-Type':'text/plain'});
+                    res.end('Response data is null');
+                }
+            })
+            .catch(function(error){
+                console.log(error.message);
+                res.writeHead(500, {'Content-Type':'text/plain'});
+                res.end('Failed to fetch data');
+            });
     }
 
     let extName = path.extname(filePath);
