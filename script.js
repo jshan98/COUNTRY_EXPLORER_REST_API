@@ -1,8 +1,9 @@
 var countryCount = 12; // limits how many country cards are displayed at a given time
-var filteredCountries = data; // Contains the array of countries
+var filteredCountries = []; // Contains the array of countries
 // Listens for the DOMContentLoaded event to trigger the populateCards function.
 document.addEventListener("DOMContentLoaded", fetchData().then(function(data){
     populateCountryCards(data, countryCount);
+    filteredCountries = data;
 })); // Listens for the loading of the DOM content and calls populateCountryCards only when the data is fetched from the API
 
 var searchInput = document.getElementById("search-input"); // Holds the name search bar element
