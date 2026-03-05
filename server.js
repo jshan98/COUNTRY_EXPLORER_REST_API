@@ -1,10 +1,8 @@
 const http = require('http');
+const controller = require('./controller.js');
 
 // Creates server and sends response
-const server = http.createServer(function(req, res){
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Welcome to Country Explorer');
-});
+const server = http.createServer(controller.handleRequest);
 
 const PORT = 3000;
 
