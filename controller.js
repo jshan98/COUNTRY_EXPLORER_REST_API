@@ -12,7 +12,7 @@ function handleRequest(req, res){
 
     if(filePath == "./"){
         filePath = "./index.html";
-    } else if(filePath.substring(0,13) == "./detal.html" ){
+    } else if(filePath.substring(0,13) === "./detail.html" ){
         filePath = "./detail.html";
     }
 
