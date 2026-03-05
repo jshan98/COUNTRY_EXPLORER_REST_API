@@ -1,9 +1,11 @@
 var countryCount = 12; // limits how many country cards are displayed at a given time
-var filteredCountries = []; // Contains the array of countries
+var filteredCountries = []; // Contains the filtered array of countries
+var allCountries = []; // Contains an array of all countries
 // Listens for the DOMContentLoaded event to trigger the populateCards function.
 document.addEventListener("DOMContentLoaded", fetchData().then(function(data){
     populateCountryCards(data, countryCount);
-    filteredCountries = data;
+    allCountries = data;
+    filteredCountries = allCountries;
 })); // Listens for the loading of the DOM content and calls populateCountryCards only when the data is fetched from the API
 
 var searchInput = document.getElementById("search-input"); // Holds the name search bar element
@@ -162,15 +164,15 @@ function hideErrorMessage(errorElement){
 function applyFiltersNoSearch(allRegions, regionIn, populationIn){
     let filtered = [];
     if(allRegions){
-        for(let index = 0; index < data.length; index++){
-            if(data[index].population >= populationIn) {
-                filtered.push(data[index]);
+        for(let index = 0; index < allCountries.length; index++){
+            if(allCountries[index].population >= populationIn) {
+                filtered.push(allCountries[index]);
             }
         }
     } else {
-        for(let index = 0; index < data.length; index++){
-            if(data[index].region == regionIn && data[index].population >= populationIn) {
-                filtered.push(data[index]);
+        for(let index = 0; index < allCountries.length; index++){
+            if(allCountries[index].region == regionIn && allCountries[index].population >= populationIn) {
+                filtered.push(allCountries[index]);
             }
         }
     }
@@ -190,16 +192,16 @@ function applyFiltersNoSearch(allRegions, regionIn, populationIn){
 function applyFiltersSearch(searchIn, allRegions, regionIn, populationIn){
     let filtered = [];
     if(allRegions){
-        for(let index = 0; index < data.length; index++){
-            if(data[index].name.official.toLowerCase().includes(searchIn) && data[index].population >= populationIn) {
-                filtered.push(data[index]);
+        for(let index = 0; index < allCountries.length; index++){
+            if(allCountries[index].name.official.toLowerCase().includes(searchIn) && allCountries[index].population >= populationIn) {
+                filtered.push(allCountries[index]);
             }
         }
     } else {
-        for(let index = 0; index < data.length; index++){
-            if(data[index].name.official.toLowerCase().includes(searchIn)) {
-                if(data[index].region == regionIn && data[index].population >= populationIn){
-                    filtered.push(data[index]);
+        for(let index = 0; index < allCountries.length; index++){
+            if(allCountries[index].name.official.toLowerCase().includes(searchIn)) {
+                if(allCountries[index].region == regionIn && allCountries[index].population >= populationIn){
+                    filtered.push(allCountries[index]);
                 }
             }
         }
