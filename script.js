@@ -1,7 +1,12 @@
 var countryCount = 12; // limits how many country cards are displayed at a given time
-var filteredCountries = data; // Contains the array of countries
+var filteredCountries = []; // Contains the array of countries
+var allCountries = [];
 // Listens for the DOMContentLoaded event to trigger the populateCards function.
-document.addEventListener("DOMContentLoaded", populateCountryCards(filteredCountries, countryCount)); // Listens for the loading of the DOM content and calls populateCountryCards
+document.addEventListener("DOMContentLoaded", fetchData().then(function(data){
+    populateCountryCards(data, countryCount);
+    filteredCountries = data;
+    allCountries = data
+})); // Listens for the loading of the DOM content and calls populateCountryCards only when the data is fetched from the API
 
 var searchInput = document.getElementById("search-input"); // Holds the name search bar element
 var regionInput = document.getElementById("region-select"); // Holds the region select drop down element
@@ -24,12 +29,61 @@ document.addEventListener('click', function(event) {
 });
 
 /**
+ * Function: fetchData
+ * Description: Calls the /countries routing to fetch data from REST Countries API
+ * @returns fetched countries as JSON
+ */
+function fetchData(){
+    return fetch("/countries")
+        .then(function(response){
+            if(!response.ok){
+                throw new Error("HTTP error! Status:", response.status);
+            }
+            return response.json();
+        })
+        .catch(function(error){
+            console.error("Error fetching countries data");
+            throw error;
+        });
+}
+
+/**
+ * Function: getFormattedCurrencies 
+ * Description: Takes the currencies list and produces are formatted string of currencies
+ * @param {*} currencies 
+ * @returns formatted string of currencies
+ */
+function getFormattedCurrencies(currencies){
+    let currencyCodesArray = Object.keys(currencies);
+    let output = "";
+    for(let index = 0; index < currencyCodesArray.length; index++){
+        output += (currencies[currencyCodesArray[index]].name + ", ");
+    }
+    return output.substring(0, output.length-2);
+}
+
+/**
+ * Function: getFormattedLanguages
+ * Description: Takes the languages list and produces are formatted string of languages
+ * @param {*} languages 
+ * @returns formatted string of langauges
+ */
+function getFormattedLanguages(languages){
+    let languageCodesArray = Object.keys(languages);
+    let output = "";
+    for(let index = 0; index < languageCodesArray.length; index++){
+        output += (languages[languageCodesArray[index]] + ", ");
+    }
+    return output.substring(0, output.length-2);
+}
+
+/**
  * Function: countryCardHandler
  * @param {*} country 
  * Description: Takes an object of country an creates a query string and sends the query to the details page to be displayed
  */
 function countryCardHandler(country) {
-    let queryString = "?name=" + encodeURIComponent(country.name.official) + "&flag=" + encodeURIComponent(country.flags.svg) + "&population=" + country.population + "&region=" + country.region + "&subRegion=" + encodeURIComponent(country.subregion) + "&capital=" + encodeURIComponent(country.capital) + "&currencies=" + encodeURIComponent(getFormattedNames(country.currencies)) + "&languages=" + encodeURIComponent(getFormattedNames(country.languages));
+    let queryString = "?name=" + encodeURIComponent(country.name.official) + "&flag=" + encodeURIComponent(country.flags.svg) + "&population=" + country.population + "&region=" + country.region + "&subRegion=" + encodeURIComponent(country.subregion) + "&capital=" + encodeURIComponent(country.capital) + "&currencies=" + encodeURIComponent(getFormattedCurrencies(country.currencies)) + "&languages=" + encodeURIComponent(getFormattedLanguages(country.languages));
     window.location.href = ("detail.html" + queryString);
 }
 
@@ -81,20 +135,6 @@ function filterData(){
 }
 
 /**
- * Function: getFormattedNames
- * @param {*} item 
- * Decription: receives a list passed from an object of country and creates a formatted sub-string to be returned
- * @returns output.substring(0, output.length-2)
- */
-function getFormattedNames(item){
-    let output = "";
-    for(let index = 0; index < item.length; index++){
-        output += (item[index].name + ", ");
-    }
-    return output.substring(0, output.length-2);
-}
-
-/**
  * Function: showErrorMessage
  * @param {*} errorElement 
  * Description: Shows the error message by changing the hidden boolean value to false.
@@ -124,17 +164,15 @@ function hideErrorMessage(errorElement){
 function applyFiltersNoSearch(allRegions, regionIn, populationIn){
     let filtered = [];
     if(allRegions){
-        for(let index = 0; index < data.length; index++){
-            if(data[index].population >= populationIn) {
-                filtered.push(data[index]);
-            }
-        }
+        // just population
+        filtered = allCountries.filter(country => {
+            return country.population >= populationIn;
+        });
     } else {
-        for(let index = 0; index < data.length; index++){
-            if(data[index].region == regionIn && data[index].population >= populationIn) {
-                filtered.push(data[index]);
-            }
-        }
+        // population and region
+        filtered = allCountries.filter(country => {
+            return country.region == regionIn && country.population >= populationIn;
+        });
     }
     return filtered;
 }
@@ -152,19 +190,15 @@ function applyFiltersNoSearch(allRegions, regionIn, populationIn){
 function applyFiltersSearch(searchIn, allRegions, regionIn, populationIn){
     let filtered = [];
     if(allRegions){
-        for(let index = 0; index < data.length; index++){
-            if(data[index].name.official.toLowerCase().includes(searchIn) && data[index].population >= populationIn) {
-                filtered.push(data[index]);
-            }
-        }
+        // name and population
+        filtered = allCountries.filter(country => {
+            return country.name.official.toLowerCase().includes(searchIn) && country.population >= populationIn;
+        });
     } else {
-        for(let index = 0; index < data.length; index++){
-            if(data[index].name.official.toLowerCase().includes(searchIn)) {
-                if(data[index].region == regionIn && data[index].population >= populationIn){
-                    filtered.push(data[index]);
-                }
-            }
-        }
+        // name, region, and population
+        filtered = allCountries.filter(country => {
+            return (country.name.official.toLowerCase().includes(searchIn) && country.region == regionIn) && country.population >= populationIn;
+        });
     }
     return filtered;
 }
