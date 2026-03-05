@@ -1,7 +1,9 @@
 var countryCount = 12; // limits how many country cards are displayed at a given time
 var filteredCountries = data; // Contains the array of countries
 // Listens for the DOMContentLoaded event to trigger the populateCards function.
-document.addEventListener("DOMContentLoaded", populateCountryCards(filteredCountries, countryCount)); // Listens for the loading of the DOM content and calls populateCountryCards
+document.addEventListener("DOMContentLoaded", fetchData().then(function(data){
+    populateCountryCards(data, countryCount);
+})); // Listens for the loading of the DOM content and calls populateCountryCards only when the data is fetched from the API
 
 var searchInput = document.getElementById("search-input"); // Holds the name search bar element
 var regionInput = document.getElementById("region-select"); // Holds the region select drop down element
@@ -22,6 +24,55 @@ document.addEventListener('click', function(event) {
         countryCardHandler(filteredCountries[event.target.id]);
     }
 });
+
+/**
+ * Function: fetchData
+ * Description: Calls the /countries routing to fetch data from REST Countries API
+ * @returns fetched countries as JSON
+ */
+function fetchData(){
+    return fetch("/countries")
+        .then(function(response){
+            if(!response.ok){
+                throw new Error("HTTP error! Status:", response.status);
+            }
+            return response.json();
+        })
+        .catch(function(error){
+            console.error("Error fetching countries data");
+            throw error;
+        });
+}
+
+/**
+ * Function: getFormattedCurrencies 
+ * Description: Takes the currencies list and produces are formatted string of currencies
+ * @param {*} currencies 
+ * @returns formatted string of currencies
+ */
+function getFormattedCurrencies(currencies){
+    let currencyCodesArray = Object.keys(currencies);
+    let output = "";
+    for(let index = 0; index < currencyCodesArray.length; index++){
+        output += (currencies[currencyCodesArray[index]].name + ", ");
+    }
+    return output.substring(0, output.length-2);
+}
+
+/**
+ * Function: getFormattedLanguages
+ * Description: Takes the languages list and produces are formatted string of languages
+ * @param {*} languages 
+ * @returns formatted string of langauges
+ */
+function getFormattedLanguages(languages){
+    let languageCodesArray = Object.keys(languages);
+    let output = "";
+    for(let index = 0; index < languageCodesArray.length; index++){
+        output += (languages[languageCodesArray[index]] + ", ");
+    }
+    return output.substring(0, output.length-2);
+}
 
 /**
  * Function: countryCardHandler
