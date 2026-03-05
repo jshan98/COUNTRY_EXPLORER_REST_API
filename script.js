@@ -80,7 +80,7 @@ function getFormattedLanguages(languages){
  * Description: Takes an object of country an creates a query string and sends the query to the details page to be displayed
  */
 function countryCardHandler(country) {
-    let queryString = "?name=" + encodeURIComponent(country.name.official) + "&flag=" + encodeURIComponent(country.flags.svg) + "&population=" + country.population + "&region=" + country.region + "&subRegion=" + encodeURIComponent(country.subregion) + "&capital=" + encodeURIComponent(country.capital) + "&currencies=" + encodeURIComponent(getFormattedNames(country.currencies)) + "&languages=" + encodeURIComponent(getFormattedNames(country.languages));
+    let queryString = "?name=" + encodeURIComponent(country.name.official) + "&flag=" + encodeURIComponent(country.flags.svg) + "&population=" + country.population + "&region=" + country.region + "&subRegion=" + encodeURIComponent(country.subregion) + "&capital=" + encodeURIComponent(country.capital) + "&currencies=" + encodeURIComponent(getFormattedCurrencies(country.currencies)) + "&languages=" + encodeURIComponent(getFormattedLanguages(country.languages));
     window.location.href = ("detail.html" + queryString);
 }
 
@@ -129,20 +129,6 @@ function filterData(){
         return false;
     }
     populateCountryCards(filteredCountries, countryCount);
-}
-
-/**
- * Function: getFormattedNames
- * @param {*} item 
- * Decription: receives a list passed from an object of country and creates a formatted sub-string to be returned
- * @returns output.substring(0, output.length-2)
- */
-function getFormattedNames(item){
-    let output = "";
-    for(let index = 0; index < item.length; index++){
-        output += (item[index].name + ", ");
-    }
-    return output.substring(0, output.length-2);
 }
 
 /**
